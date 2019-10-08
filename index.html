@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Joe's Hotdogs</title>
+	<style>
+		body{
+			background-color: #902724;
+			color: #FFF;	
+		}
+		
+		h1{
+			text-align: center;
+		}
+		
+		h2{
+			text-align: center;
+			text-decoration: underline;
+		}
+		
+		h3{
+			text-align: center;
+		}
+		
+		h4{
+			padding: 10px 200px 20px 300px;
+			text-align: left;	
+		}
+	
+	</style>
+</head>
+
+<body>
+	<h1> Joe's Hotdog Stand </h1>
+	<h2> Menu </h2>
+	<h3> 
+		Hotdogs -------- $3.25 <br />
+	    French Fries --- $2.00 <br />
+		Drinks ---------- $1.50 <br /><br />
+	</h3>
+	<h2> Order here </h2>
+	<h3> 
+		Hotdogs..............
+		<input id="hotdog_quant" value ="0"> <br />
+		French Fries.....
+		<input id="ff_quant" value ="0"> <br />
+	    Drinks...............
+		<input id="drinks_quant" value ="0"> <br /> <br />	
+		<button type="button" onclick="process_order()"> Order </button>
+	</h3>
+	
+	<script language="javascript">
+		
+		// Create associative array for menu
+		var menu = {};
+		menu["hotdogs"] = "3.25";
+		menu["frenchfries"] = "2.00";
+		menu["drinks"] = "1.50";
+		
+		// Function: process_order
+		// Input: none
+		// Returns: none
+		// Purpose: main function for processing the user's order
+		function process_order(){
+			
+			var total = 0;
+			var subtotal = 0;
+			var discount = 0;
+			var tax = 0;
+			
+			// Create associate array for order quantities
+			var order_quant = {};
+			order_quant["hotdogs"] = document.getElementById("hotdog_quant").value;
+			order_quant["frenchfries"] = document.getElementById("ff_quant").value;
+			order_quant["drinks"] = document.getElementById("drinks_quant").value;
+			
+			//display items ordered with quantities
+			var order_summary = "-- ORDER SUMMARY -- <br />" + 
+								"Hotdogs: " + order_quant["hotdogs"] + "<br />" + 
+								"French Fries: " + order_quant["frenchfries"] + "<br />" + 
+								"Drinks: " + order_quant["drinks"] + "<br />"
+								;
+				
+			document.getElementById("order_summary").innerHTML = order_summary;
+			
+			total = calculate_subtotal(menu, order_quant, total);
+			total = calculate_discount(menu, order_quant, total);
+			total = calculate_tax(menu, order_quant, total);
+			
+			
+			document.getElementById("total").innerHTML = "***TOTAL*** <br /> $" + total;
+		}
+
+		// Function: calculate_subtotal
+		// Input: menu array, order details array, old order total
+		// Returns: new order total
+		// Purpose: calculate and display the subtotal on the order
+		function calculate_subtotal(menu, ordered, old_total){
+			var new_total = old_total + 
+						(parseFloat(ordered["hotdogs"]) * parseFloat(menu["hotdogs"]))  + 
+						(parseFloat(ordered["frenchfries"]) * parseFloat(menu["frenchfries"])) + 
+						(parseFloat(ordered["drinks"]) * parseFloat(menu["drinks"]));
+			
+		    document.getElementById("subtotal").innerHTML = "SUBTOTAL <br /> $" + new_total;
+			// display subtotal
+			return new_total;
+		}
+
+		// Function: calculate_discount
+		// Input: menu array, order details array, old order total
+		// Returns: new order total
+		// Purpose: calculate and display the discount on the order
+		function calculate_discount(menu, ordered, old_total){
+			var new_total = old_total;
+			var discount = 0;
+			if(old_total > 20){
+				new_total = old_total * 0.9;
+				discount = old_total * 0.1;
+				discount = discount.toFixed(2);
+			}
+			// display discount
+			document.getElementById("discount").innerHTML = "DISCOUNT <br /> - $" 
+																				+ discount;
+			return new_total;
+		}
+		
+		// Function: calculate_tax
+		// Input: menu array, order details array, old order total
+		// Returns: new order total
+		// Purpose: calculate and display the tax on the order
+		function calculate_tax(menu, ordered, old_total){
+			var new_total = old_total;
+			var tax = old_total * 0.0625;
+			
+			tax = tax.toFixed(2);
+			new_total += parseFloat(tax);
+			new_total = new_total.toFixed(2);
+			
+			// display tax
+			 document.getElementById("tax").innerHTML = "TAX <br /> +$" + tax;
+			return new_total;
+		}
+	
+	
+	
+	</script>
+	
+	<h4 id = "order_summary"> </h4>
+	<h4 id = "subtotal"> </h4>
+	<h4 id = "discount"> </h4>
+	<h4 id = "tax"> </h4>
+	<h4 id = "total"> </h4>
+	
+</body>
+</html>
